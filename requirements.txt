@@ -1,3 +1,7 @@
 pyautogui
 pillow
 pynput
+opencv-python
+numpy
+pillow
+mss

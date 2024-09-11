@@ -34,7 +34,7 @@ class window():
             print(f"Error al ejecutar wmctrl: {e}")
 
     def display(self, rom_path):
-        self.process = subprocess.Popen(["mgba", rom_path])
+        self.process = subprocess.Popen(["mgba-qt", rom_path])
         time.sleep(2)
         self.__get_windowID()
         subprocess.run(["wmctrl", "-ir", self.window_id, "-e", "0,100,100,800,600"])
@@ -57,3 +57,5 @@ class window():
     def focus(self):
         # Dar foco a la ventana
         subprocess.run(["wmctrl", "-ia", self.window_id])
+
+

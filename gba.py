@@ -1,21 +1,27 @@
 import time
+import os
 from modules.window import window
 from modules.Games.RZ import RZ
 
+def clean_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def print_menu():
+    game = None
+    print("1. Pokemon Zafiro")
+    print("2. Pokemon Rubi")
+    print("3. Salir")
+    print("Seleccione un juego:")
+    option = int(input())
+    
+    if option < 3: game = RZ(option % 2)
+
+
+    game.menu_mode()
 
 def main():
-    game = RZ(False)
-    display = window()
-    display.display("./roms/Rubi/Pokemon-Rubi.gba")
-    time.sleep(2)
-    display.move(400,200)
-    time.sleep(5)
-    display.focus()
-    game.start_game()
-    game.reset_game()
-
-    time.sleep(5)
-    display.close()
+    clean_terminal()
+    print_menu()
 
 if __name__ == "__main__":
     main()

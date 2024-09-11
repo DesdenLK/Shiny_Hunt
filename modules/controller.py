@@ -74,3 +74,39 @@ class controller():
         self.keyboard.release('z')
         self.keyboard.release(Key.backspace)
         self.keyboard.release(Key.enter)
+
+    def fast_forward_on(self):
+        self.keyboard.press(Key.shift)
+        self.keyboard.press(Key.tab)
+        self.keyboard.release(Key.tab)
+        self.keyboard.release(Key.shift)
+
+    def fast_forward_off(self):
+        self.keyboard.press(Key.shift)
+        self.keyboard.press(Key.tab)
+        self.keyboard.release(Key.tab)
+        self.keyboard.release(Key.shift)
+
+    def make_screenshot(self):
+        self.keyboard.tap(Key.f12)
+        time.sleep(2)
+
+    def pause(self):
+        self.keyboard.press(Key.ctrl)
+        self.keyboard.press('p')
+        self.keyboard.release(Key.ctrl)
+        self.keyboard.release('p')
+
+    def avanza_frames(self,max):
+        for _ in range(0,max):
+            self.keyboard.press(Key.ctrl)
+            self.keyboard.press('n')
+            self.keyboard.release(Key.ctrl)
+            self.keyboard.release('n')
+
+    def resume(self):
+        self.keyboard.press(Key.ctrl)
+        self.keyboard.press('p')
+        self.keyboard.release(Key.ctrl)
+        self.keyboard.release('p')
+
