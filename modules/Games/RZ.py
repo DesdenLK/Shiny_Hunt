@@ -56,6 +56,7 @@ class RZ(baseGame):
         self.controller.press_a()
         time.sleep(0.5)
         self.controller.press_a()
+        time.sleep(0.5)
 
     def menu_mode(self):
         print("1. Starter Hunting")
@@ -92,27 +93,26 @@ class RZ(baseGame):
             y = 91
         
         self.referenceColorPixelStarter = self.get_colorPixel_reference("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", x,y)
-        time.sleep(0.5)
         self.reset_game()
         while True:
             print(f"Resets: {self.resets}")
             self.start_game()
             self.select_starter(option)
 
-            self.controller.fast_forward_off()
+            #self.controller.fast_forward_off()
 
             self.controller.make_screenshot()
             
-            self.controller.fast_forward_on()
+            #self.controller.fast_forward_on()
             color = self.get_colorPixel_reference("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png", x,y)
             
-            time.sleep(0.5)
             
             print(f"Color: {color}")
 
             if color != self.referenceColorPixelStarter:
                 print("Shiny Found!")
                 self.controller.pause()
+                self.controller.fast_forward_off()
                 input("Press Enter to continue...")
                 break
 
@@ -122,11 +122,11 @@ class RZ(baseGame):
 
     def get_referenceImage(self):
         #self.controller.pause()
-        self.controller.fast_forward_off()
+        #self.controller.fast_forward_off()
         #self.controller.avanza_frames(100)
         self.controller.make_screenshot()
         #self.controller.resume()
-        self.controller.fast_forward_on()
+        #self.controller.fast_forward_on()
     
         if self.isZafiro:
             change_image_name("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Zafiro/Pokemon-Zafiro-0.png", "reference")
