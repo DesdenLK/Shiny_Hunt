@@ -4,6 +4,10 @@ import time
 class controller():
     keyboard = Controller()
 
+    def spin_mode(self):
+        self.press_up()
+        time.sleep(0.1)
+        self.press_right()
     def press_a(self):
         self.keyboard.press('x')
         time.sleep(0.1)

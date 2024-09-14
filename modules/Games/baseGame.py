@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from ..controller import controller
 from ..window import window
 from ..image_handler import *
+import os
 
 class baseGame(ABC):
     controller = controller()
@@ -13,6 +14,8 @@ class baseGame(ABC):
         self.started = False
         self.referenceColorPixelStarter = None
 
+    def clean_terminal(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     @abstractmethod
     def start_game(self):
@@ -43,8 +46,29 @@ class baseGame(ABC):
         pass
 
     @abstractmethod
+    def spin_mode(self):
+        pass
+
+    @abstractmethod
+    def search_encounter(self):
+        pass
+
+    @abstractmethod
+    def battle_started(self):
+        pass
+
+    @abstractmethod
     def get_referenceImage(self):
+        pass
+    
+    @abstractmethod
+    def static_encounter(self, option):
+        pass
+    
+    @abstractmethod
+    def legendary_menu(self):
         pass
 
     def get_colorPixel_reference(self, path,x,y):
         return color_pixel(path, x, y)
+    

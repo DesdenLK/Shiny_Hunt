@@ -2,12 +2,15 @@ import time
 import os
 from modules.window import window
 from modules.Games.RZ import RZ
+import pyfiglet
+from colorama import Fore, Back, Style
 
 def clean_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def print_menu():
     game = None
+    print(Fore.YELLOW + pyfiglet.figlet_format("Auto Shiny Hunt", font="slant") + Fore.RESET)
     print("1. Pokemon Zafiro")
     print("2. Pokemon Rubi")
     print("3. Salir")
@@ -16,7 +19,7 @@ def print_menu():
     
     if option < 3: game = RZ(option % 2)
 
-
+    clean_terminal()
     game.menu_mode()
 
 def main():
