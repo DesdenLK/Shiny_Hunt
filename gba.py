@@ -1,7 +1,7 @@
 import time
 import os
 from modules.window import window
-from modules.Games.RZ import RZ
+from modules.Games.Rubi import Rubi
 import pyfiglet
 from colorama import Fore, Back, Style
 
@@ -17,7 +17,7 @@ def print_menu():
     print("Seleccione un juego:")
     option = int(input())
     
-    if option < 3: game = RZ(option % 2)
+    if option < 3: game = Rubi()
 
     clean_terminal()
     game.menu_mode()

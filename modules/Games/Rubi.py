@@ -5,28 +5,29 @@ from modules.Games.baseGame import baseGame
 from ..image_handler import *
 from PIL import Image
 
-class RZ(baseGame):
-    def __init__(self, Zafiro):
+rom_path = "./roms/Rubi/Pokemon-Rubi.gba"
+images_path = "./roms/Rubi/Images/"
+base_path = "./roms/Rubi/"
+
+class Rubi(baseGame):
+    def __init__(self):
         super().__init__()
-        self.display.display("./roms/Rubi/Pokemon-Rubi.gba")
+        self.display.display(rom_path)
         time.sleep(1)
         self.display.focus()
         self.controller.fast_forward_on()
         self.display.move(560,240)
         time.sleep(1)
+        
+        self.name = "Rubi"
 
-
-        if Zafiro: self.name = "Pokemon Zafiro"
-        else: self.name = "Pokemon Rubi"
-
-        self.isZafiro = Zafiro
         self.started = True
         self.in_battle = False
 
-    if os.path.exists("./roms/Rubi/Images/reference.png"):
-        os.remove("./roms/Rubi/Images/reference.png")
-    if os.path.exists("./roms/Rubi/Pokemon-Rubi-0.png"):
-        os.remove("./roms/Rubi/Pokemon-Rubi-0.png")
+    if os.path.exists(f"{images_path}reference.png"):
+        os.remove(f"{images_path}reference.png")
+    if os.path.exists(f"{base_path}Pokemon-Rubi-0.png"):
+        os.remove(f"{base_path}Pokemon-Rubi-0.png")
 
 
     def start_game(self):
@@ -67,7 +68,7 @@ class RZ(baseGame):
         time.sleep(0.5)
 
     def menu_mode(self):
-        print(Fore.RED + pyfiglet.figlet_format("Rubi/", font="slant") + Fore.BLUE + pyfiglet.figlet_format("/Zafiro", font="slant") + Fore.RESET)
+        print(Fore.RED + pyfiglet.figlet_format("Rubi", font="slant") + Fore.RESET)
         print("1. Starter Hunting")
         print("2. Spin Mode")
         print("3. Legendary Hunting")
@@ -106,7 +107,7 @@ class RZ(baseGame):
             x = 72
             y = 91
         
-        self.referenceColorPixelStarter = self.get_colorPixel_reference("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", x,y)
+        self.referenceColorPixelStarter = self.get_colorPixel_reference(f"{images_path}reference.png", x,y)
         self.reset_game()
         while True:
             print(f"Resets: {self.resets}")
@@ -118,7 +119,7 @@ class RZ(baseGame):
             self.controller.make_screenshot()
             
             #self.controller.fast_forward_on()
-            color = self.get_colorPixel_reference("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png", x,y)
+            color = self.get_colorPixel_reference(f"{base_path}Pokemon-Rubi-0.png", x,y)
             
             
             print(f"Color: {color}")
@@ -130,21 +131,21 @@ class RZ(baseGame):
                 input("Press Enter to continue...")
                 break
 
-            delete_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png")
+            delete_image(f"{base_path}Pokemon-Rubi-0.png")
             self.reset_game()
             time.sleep(0.5)
 
     def battle_started(self):
         self.controller.make_screenshot()
         if self.isZafiro:
-            color = self.get_colorPixel_reference("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Zafiro-0.png", 0,159)
-            delete_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Zafiro-0.png")
+            color = self.get_colorPixel_reference(f"{base_path}Pokemon-Rubi-0.png", 0,159)
+            delete_image(f"{base_path}Pokemon-Rubi-0.png")
             if color == (74,66,82):
                 return True
             return False
         else:
-            color = self.get_colorPixel_reference("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png", 0,159)
-            delete_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png")
+            color = self.get_colorPixel_reference(f"{base_path}Pokemon-Rubi-0.png", 0,159)
+            delete_image(f"{base_path}Pokemon-Rubi-0.png")
             if color == (74,66,82):
                 return True
             return False
@@ -181,11 +182,17 @@ class RZ(baseGame):
 
     def static_encounter(self, option):
         self.start_game()
+
         if option == 2:
             self.Groudon_Kyogre()
+        else:
+            self.controller.press_a()
+            time.sleep(0.5)
+            self.controller.press_a()
+        
         time.sleep(0.5)
         self.get_referenceImage()
-        self.crop_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", 110, 5, 220, 74)
+        self.crop_image(f"{images_path}reference.png", f"{images_path}reference.png", 120, 5, 220, 74)
         self.reset_game()
 
         while True:
@@ -194,10 +201,15 @@ class RZ(baseGame):
             
             if (option == 2):
                 self.Groudon_Kyogre()
+            else:
+                self.controller.press_a()
+                time.sleep(0.5)
+                self.controller.press_a()
+            
             time.sleep(0.5)
             self.controller.make_screenshot()
-            self.crop_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png", 110, 5, 220, 74)
-            a = compare_images("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png")
+            self.crop_image(f"{base_path}Pokemon-Rubi-0.png", f"{base_path}Pokemon-Rubi-0.png", 120, 5, 220, 74)
+            a = compare_images(f"{images_path}reference.png", f"{images_path}reference.png")
             if a != 0:
                 print("Shiny Found!")
                 self.controller.pause()
@@ -205,7 +217,7 @@ class RZ(baseGame):
                 input("Press Enter to continue...")
                 break
             print("NOT SHINY: ", a)
-            delete_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png")
+            delete_image(f"{base_path}Pokemon-Rubi-0.png")
             self.reset_game()
     
     def Groudon_Kyogre(self):
@@ -215,6 +227,7 @@ class RZ(baseGame):
         time.sleep(1)
         self.controller.press_a()
         time.sleep(1)
+
     def get_referenceImage(self):
         #self.controller.pause()
         #self.controller.fast_forward_off()
@@ -223,15 +236,11 @@ class RZ(baseGame):
         #self.controller.resume()
         #self.controller.fast_forward_on()
     
-        if self.isZafiro:
-            change_image_name("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Zafiro/Pokemon-Zafiro-0.png", "reference")
-            move_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Huntroms/Zafiro/Images")
-        else:
-            change_image_name("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-0.png", "reference")
-            move_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images")
+        change_image_name(f"{base_path}Pokemon-Rubi-0.png", "reference")
+        move_image(f"{base_path}reference.png", images_path)
         
-        #self.crop_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png",60,80,80,90)
-        #self.remove_background("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png")
+        #self.crop_image("./roms/Rubi/Images/reference.png", "./roms/Rubi/Images/reference.png",60,80,80,90)
+        #self.remove_background("./roms/Rubi/Images/reference.png", "./roms/Rubi/Images/reference.png")
 
 
     def crop_image(self,image_path, output_path, left, top, right, bottom):
@@ -253,6 +262,3 @@ class RZ(baseGame):
 
         # Save the image with transparent background
         image.save(output_path)
-    
-    #crop_image(None,"/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/referecropnce.png", 60,80,80,90)
-    #remove_background(None, "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/reference.png","/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images/2.png")

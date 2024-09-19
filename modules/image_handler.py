@@ -64,17 +64,3 @@ def color_pixel(image_path, x, y):
     image = Image.open(image_path)
     pixel = image.getpixel((x, y))
     return pixel
-
-#print(compare_images("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Examples/Pokemon-Rubi-2.png","/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Examples/Pokemon-Rubi-1.png"))
-#print(compare_images("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-2.png","/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-3.png"))
-#print(compare_images("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-4.png","/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Pokemon-Rubi-5.png"))
-
-#move_image("/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/reference.png", "/home/luca-acosta-iglesias/Documents/Shiny_Hunt/roms/Rubi/Images")
-"""
-# Ejemplo de uso
-reference_image = "/ruta/a/la/imagen_de_referencia.png"
-new_image = "/ruta/a/la/nueva_imagen.png"
-
-difference = compare_images(reference_image, new_image)
-print(f"Porcentaje de diferencia: {difference}%")
-"""

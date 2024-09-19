@@ -7,3 +7,4 @@ pillow
 mss
 pyfiglet
 colorama
+discord-webhook

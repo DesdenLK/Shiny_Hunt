@@ -3,7 +3,7 @@ import time
 
 
 class window():
-    def __init__(self, x=100, y=100, width=800, height=600):
+    def __init__(self, x=100, y=100, width=250, height=250):
         self.x = x
         self.y = y
         self.width = width
@@ -37,7 +37,7 @@ class window():
         self.process = subprocess.Popen(["mgba-qt", rom_path])
         time.sleep(2)
         self.__get_windowID()
-        subprocess.run(["wmctrl", "-ir", self.window_id, "-e", "0,100,100,800,600"])
+        subprocess.run(["wmctrl", "-ir", self.window_id, "-e", f"0,{self.x},{self.y},{self.width},{self.height}"])
 
     def close(self):
         # Cerrar la ventana
