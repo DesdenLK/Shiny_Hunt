@@ -14,8 +14,8 @@ STARTER_IDS = {
 
 
 class RubySapphireHunter(BaseHunter):
-    def __init__(self) -> None:
-        self.bridge = MGBA()
+    def __init__(self, port: int = 8888) -> None:
+        self.bridge = MGBA(port=port)
         self.input = GBAController(self.bridge)
         self.game = RubySapphireReader(self.bridge)
 

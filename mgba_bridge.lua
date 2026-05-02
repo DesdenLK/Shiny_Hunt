@@ -1,7 +1,15 @@
 local PORT = 8888
 
-local server = socket.bind("127.0.0.1", PORT)
+local PORT = 8888
+
+local server, err = socket.bind("127.0.0.1", PORT)
+while err == socket.ERRORS.ADDRESS_IN_USE do
+    PORT = PORT + 1
+    server, err = socket.bind("127.0.0.1", PORT)
+end
+
 server:listen()
+console:log("Listening on port " .. PORT)
 
 local KEY_MAP = {
     A=1, B=2, SELECT=4, START=8, RIGHT=16, LEFT=32, UP=64, DOWN=128, R=256, L=512
