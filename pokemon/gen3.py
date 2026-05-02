@@ -20,15 +20,14 @@ class PokemonGen3(Pokemon):
     tid: int
 
     @property
-    def is_shiny(self) -> bool:
-        """
-            Fórmula oficial Gen 3:
-            (TID XOR SID XOR PID_high XOR PID_low) < 8
-        """
+    def shiny_value(self) -> int:
         pid_high = (self.pid >> 16) & 0xFFFF
         pid_low = self.pid & 0xFFFF
-        shiny_value = self.tid ^ self.sid ^ pid_high ^ pid_low
-        return shiny_value < 8
+        return self.tid ^ self.sid ^ pid_high ^ pid_low
+
+    @property
+    def is_shiny(self) -> bool:
+        return self.shiny_value < 8
 
     @property
     def name(self) -> str:

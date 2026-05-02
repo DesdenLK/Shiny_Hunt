@@ -1,3 +1,5 @@
 .env
 roms
 __pycache__
+venv
+.env
