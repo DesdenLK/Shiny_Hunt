@@ -13,6 +13,9 @@ local currentSock = nil
 local framesToHold = 60
 local frameCount = 0
 
+local framesToAdvance = 0
+local advanceSock = nil
+
 callbacks:add("frame", function()
     if currentKey then
         frameCount = frameCount + 1
@@ -31,6 +34,14 @@ callbacks:add("frame", function()
         currentSock = item.sock
         emu:addKeys(currentKey)
         frameCount = 0
+    end
+
+    if framesToAdvance > 0 then
+        framesToAdvance = framesToAdvance - 1
+        if framesToAdvance == 0 and advanceSock then
+            advanceSock:send("OK\n")
+            advanceSock = nil
+        end
     end
 end)
 
@@ -64,6 +75,15 @@ local function handleClient(sock)
                 local slot = tonumber(data:match("^LS:(%d+)"))
                 emu:loadStateSlot(slot)
                 sock:send("OK\n")
+
+            elseif data:match("^SR") then
+                -- A(1) + B(2) + SELECT(4) + START(8) = 15
+                table.insert(keyQueue, {key=15, sock=sock})
+
+            elseif data:match("^AF:%d+") then
+                local n = tonumber(data:match("^AF:(%d+)"))
+                framesToAdvance = n
+                advanceSock = sock
             end
         end
     end)

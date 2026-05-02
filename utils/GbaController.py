@@ -7,3 +7,9 @@ class GBAController():
 
     def load_state(self, slot: int) -> None:
         self._bridge._send_command_raw(f"LS:{slot}")
+
+    def soft_reset(self) -> None:
+        self._bridge._send_command_raw("SR")
+
+    def advance_frames(self, n: int) -> None:
+        self._bridge._send_command_raw(f"AF:{n}")
