@@ -60,11 +60,17 @@ class RubySapphireHunter(BaseHunter):
         i = 1
         pid_count = {}
         while not is_shiny:
-            self.soft_reset()
-            r = random.uniform(0.1, 0.3)
-            time.sleep(r)
-            self.select_starter(starter)
-            pokemon = self.game.read_pokemon(STARTER_IDS.get(starter))
+            try:
+                self.soft_reset()
+                r = random.uniform(0.1, 0.3)
+                time.sleep(r)
+                self.select_starter(starter)
+                pokemon = self.game.read_pokemon(STARTER_IDS.get(starter))
+            except (TimeoutError, OSError) as e:
+                print(f"\033[31mConnection error: {e}. Reconnecting...\033[0m")
+                self.bridge.disconnect()
+                self.bridge.connect()
+                continue
             is_shiny = pokemon.is_shiny
             pid_count[pokemon.pid] = pid_count.get(pokemon.pid, 0) + 1
             count = pid_count[pokemon.pid]

@@ -1,7 +1,5 @@
 local PORT = 8888
 
-local PORT = 8888
-
 local server, err = socket.bind("127.0.0.1", PORT)
 while err == socket.ERRORS.ADDRESS_IN_USE do
     PORT = PORT + 1

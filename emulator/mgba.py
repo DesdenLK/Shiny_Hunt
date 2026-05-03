@@ -96,10 +96,15 @@ class MGBA(Emulator):
 
     def _recv_line(self) -> str:
         assert self._sock is not None
-        while b"\n" not in self._recv_buf:
-            chunk = self._sock.recv(64)
-            if not chunk:
-                raise OSError("Conexión cerrada por mGBA.")
-            self._recv_buf += chunk
+        try:
+            while b"\n" not in self._recv_buf:
+                chunk = self._sock.recv(64)
+                if not chunk:
+                    raise OSError("Conexión cerrada por mGBA.")
+                self._recv_buf += chunk
+        except (TimeoutError, OSError):
+            self._sock = None
+            self._recv_buf = b""
+            raise
         line, self._recv_buf = self._recv_buf.split(b"\n", 1)
         return line.decode()
