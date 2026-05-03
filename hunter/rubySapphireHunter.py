@@ -85,5 +85,6 @@ class RubySapphireHunter(BaseHunter):
 
             i+=1
 
-            
+        self.bridge.disconnect()
+
             

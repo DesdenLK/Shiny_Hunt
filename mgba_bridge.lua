@@ -1,11 +1,22 @@
 local PORT = 8888
 
-local server, err = socket.bind("127.0.0.1", PORT)
-while err == socket.ERRORS.ADDRESS_IN_USE do
-    PORT = PORT + 1
-    server, err = socket.bind("127.0.0.1", PORT)
+local function portInUse(port)
+    local probe = socket.connect("127.0.0.1", port)
+    if probe ~= nil then
+        return true
+    end
+    return false
 end
 
+while portInUse(PORT) do
+    PORT = PORT + 1
+    if PORT > 8900 then
+        console:error("No se encontro puerto libre en el rango 8888-8900")
+        return
+    end
+end
+
+local server = socket.bind("127.0.0.1", PORT)
 server:listen()
 console:log("Listening on port " .. PORT)
 
