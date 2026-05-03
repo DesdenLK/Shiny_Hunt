@@ -38,14 +38,15 @@ class RubySapphireHunter(BaseHunter):
             self.input.press_key("LEFT")
         elif starter_name == "Mudkip":
             self.input.press_key("RIGHT")
-        time.sleep(0.1)
+        self.input.advance_frames(6)
         self.input.press_key("A")
-        time.sleep(0.1)
+        self.input.advance_frames(6)
         self.input.press_key("A")
-        time.sleep(0.1)
+        self.input.advance_frames(6)
         random_frames = random.randint(0, 300)
         self.input.advance_frames(random_frames)
         self.input.press_key("A")
+        self.input.advance_frames(180)
 
 
     def starter_hunter_loop(self):
