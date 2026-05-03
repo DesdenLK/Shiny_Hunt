@@ -43,7 +43,7 @@ class RubySapphireHunter(BaseHunter):
         self.input.advance_frames(6)
         self.input.press_key("A")
         self.input.advance_frames(6)
-        random_frames = random.randint(0, 300)
+        random_frames = random.randint(0, 1000)
         self.input.advance_frames(random_frames)
         self.input.press_key("A")
         self.input.advance_frames(180)
