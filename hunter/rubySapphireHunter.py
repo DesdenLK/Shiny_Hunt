@@ -14,10 +14,11 @@ STARTER_IDS = {
 
 
 class RubySapphireHunter(BaseHunter):
-    def __init__(self, port: int = 8888) -> None:
+    def __init__(self, port: int = 8888, version: str = "ruby") -> None:
         self.bridge = MGBA(port=port)
         self.input = GBAController(self.bridge)
         self.game = RubySapphireReader(self.bridge)
+        self.version = version
 
     def load_state(self, state: int):
         self.input.load_state(state)
@@ -86,11 +87,8 @@ class RubySapphireHunter(BaseHunter):
             print(f"Pokemon {pokemon} is shiny? {is_shiny} Shiny Value {pokemon.shiny_value}. Try number {i}. PID 0x{pokemon.pid:08X} seen {seen_color}{count}x{reset}")
             i += 1
 
-    def starter_hunter_loop(self):
+    def starter_hunter_loop(self, starter: str):
         self.bridge.connect()
-        starter = input("Write the name of the starter you want to catch!")
-        while starter != "Treecko" and starter != "Torchic" and starter != "Mudkip":
-            starter = input("Try Again. Write it with the first letter in capital")
 
 
         time.sleep(1)

@@ -14,7 +14,7 @@ class BaseHunter(ABC):
         ...
 
     @abstractmethod
-    def starter_hunter_loop(self):
+    def starter_hunter_loop(self, starter: str):
         ...
 
     @abstractmethod
