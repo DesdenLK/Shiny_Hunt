@@ -6,4 +6,4 @@ parser.add_argument("--port", type=int, default=8888)
 args = parser.parse_args()
 
 hunter = RubySapphireHunter(port=args.port)
-hunter.starter_hunter_loop()
+hunter.main_legendary_hunter_loop()

@@ -16,3 +16,7 @@ class BaseHunter(ABC):
     @abstractmethod
     def starter_hunter_loop(self):
         ...
+
+    @abstractmethod
+    def main_legendary_hunter_loop(self):
+        ...

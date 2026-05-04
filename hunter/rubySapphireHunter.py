@@ -48,6 +48,43 @@ class RubySapphireHunter(BaseHunter):
         self.input.press_key("A")
         self.input.advance_frames(180)
 
+    def main_legendary_hunter_loop(self):
+        self.bridge.connect()
+        time.sleep(1)
+        is_shiny = False
+        i = 1
+        pid_count = {}
+        while not is_shiny:
+            try:
+                self.soft_reset()
+                r = random.uniform(0.1, 0.3)
+                time.sleep(r)
+                random_frames = random.randint(0, 1000)
+                self.input.advance_frames(random_frames)
+                self.input.press_key("LEFT")
+                self.input.advance_frames(6)
+                self.input.press_key("A")
+                self.input.advance_frames(6)
+                self.input.press_key("A")
+                self.input.advance_frames(1300)
+                pokemon = self.game.read_enemy_pokemon()
+            except (TimeoutError, OSError) as e:
+                print(f"\033[31mConnection error: {e}. Reconnecting...\033[0m")
+                self.bridge.disconnect()
+                self.bridge.connect()
+                continue
+            is_shiny = pokemon.is_shiny
+            pid_count[pokemon.pid] = pid_count.get(pokemon.pid, 0) + 1
+            count = pid_count[pokemon.pid]
+            if count == 1:
+                seen_color = "\033[32m"
+            elif count <= 3:
+                seen_color = "\033[33m"
+            else:
+                seen_color = "\033[31m"
+            reset = "\033[0m"
+            print(f"Pokemon {pokemon} is shiny? {is_shiny} Shiny Value {pokemon.shiny_value}. Try number {i}. PID 0x{pokemon.pid:08X} seen {seen_color}{count}x{reset}")
+            i += 1
 
     def starter_hunter_loop(self):
         self.bridge.connect()
