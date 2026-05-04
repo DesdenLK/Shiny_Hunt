@@ -10,6 +10,8 @@ POKEMON_NAMES = {
     255: "Torchic",
     258: "Mudkip",
     401: "Regirock",
+    402: "Regice",
+    403: "Registeel",
     405: "Groudon",
     406: "Rayquaza"
 }

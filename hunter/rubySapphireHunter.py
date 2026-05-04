@@ -36,6 +36,8 @@ class RubySapphireHunter(BaseHunter):
             "Kyogre":   lambda: self._orb_legendary_attempt(),
             "Rayquaza": lambda: self._static_encounter_attempt(500),
             "Regirock": lambda: self._static_encounter_attempt(500),
+            "Regice": lambda: self._static_encounter_attempt(500),
+            "Registeel": lambda: self._static_encounter_attempt(500),
         }
         self.bridge.connect()
         time.sleep(1)
