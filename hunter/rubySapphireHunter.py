@@ -1,27 +1,49 @@
-from tracemalloc import start
 from emulator.mgba import MGBA
 from game.rubySapphire import RubySapphireReader
 from utils.GbaController import GBAController
 from hunter.base import BaseHunter
 import time
 import random
+
 STARTER_IDS = {
     "Treecko": 252,
     "Torchic": 255,
-    "Mudkip": 258
-
+    "Mudkip":  258,
 }
 
 
 class RubySapphireHunter(BaseHunter):
+
     def __init__(self, port: int = 8888, version: str = "ruby") -> None:
         self.bridge = MGBA(port=port)
         self.input = GBAController(self.bridge)
         self.game = RubySapphireReader(self.bridge)
         self.version = version
 
-    def load_state(self, state: int):
-        self.input.load_state(state)
+    # ------------------------------------------------------------------ #
+    # Interfaz pública                                                     #
+    # ------------------------------------------------------------------ #
+
+    def hunt_starter(self, starter: str):
+        self.bridge.connect()
+        time.sleep(1)
+        self._run_loop(lambda: self._starter_attempt(starter))
+        self.bridge.disconnect()
+
+    def hunt_legendary(self, legendary: str):
+        dispatch = {
+            "Groudon":  lambda: self._orb_legendary_attempt(),
+            "Kyogre":   lambda: self._orb_legendary_attempt(),
+            "Rayquaza": lambda: self._static_encounter_attempt(500),
+            "Regirock": lambda: self._static_encounter_attempt(500),
+        }
+        self.bridge.connect()
+        time.sleep(1)
+        self._run_loop(dispatch[legendary])
+
+    # ------------------------------------------------------------------ #
+    # Mecánicas base                                                       #
+    # ------------------------------------------------------------------ #
 
     def soft_reset(self):
         self.input.soft_reset()
@@ -29,9 +51,10 @@ class RubySapphireHunter(BaseHunter):
             self.input.advance_frames(60)
             self.input.press_key("START")
         self.input.press_key("A")
-        self.input.advance_frames(90)   # cargar partida → en juego
+        self.input.advance_frames(90)
 
-
+    def load_state(self, state: int):
+        self.input.load_state(state)
 
     def select_starter(self, starter_name: str):
         self.input.press_key("A")
@@ -44,83 +67,60 @@ class RubySapphireHunter(BaseHunter):
         self.input.advance_frames(6)
         self.input.press_key("A")
         self.input.advance_frames(6)
-        random_frames = random.randint(0, 1000)
-        self.input.advance_frames(random_frames)
+        self.input.advance_frames(random.randint(0, 1000))
         self.input.press_key("A")
         self.input.advance_frames(180)
 
-    def main_legendary_hunter_loop(self):
-        self.bridge.connect()
-        time.sleep(1)
+    # ------------------------------------------------------------------ #
+    # Intentos individuales (un reset → una lectura)                      #
+    # ------------------------------------------------------------------ #
+
+    def _starter_attempt(self, starter: str):
+        self.soft_reset()
+        time.sleep(random.uniform(0.1, 0.3))
+        self.select_starter(starter)
+        return self.game.read_pokemon(STARTER_IDS[starter])
+
+    def _main_legendary_attempt(self):
+        self.soft_reset()
+        time.sleep(random.uniform(0.1, 0.3))
+        self.input.advance_frames(random.randint(0, 1000))
+        self.input.press_key("LEFT")
+        self.input.advance_frames(6)
+        self.input.press_key("A")
+        self.input.advance_frames(6)
+        self.input.press_key("A")
+        self.input.advance_frames(1300)
+        return self.game.read_enemy_pokemon()
+
+    def _static_encounter_attempt(self, framess_to_hold: int):
+        self.soft_reset()
+        time.sleep(random.uniform(0.1, 0.3))
+        self.input.advance_frames(random.randint(0, 1000))
+        self.input.press_key("A")
+        self.input.advance_frames(6)
+        self.input.advance_frames(framess_to_hold)
+        return self.game.read_enemy_pokemon()
+        
+
+    # ------------------------------------------------------------------ #
+    # Loop genérico                                                        #
+    # ------------------------------------------------------------------ #
+
+    def _run_loop(self, attempt_fn):
         is_shiny = False
         i = 1
         pid_count = {}
+
         while not is_shiny:
             try:
-                self.soft_reset()
-                r = random.uniform(0.1, 0.3)
-                time.sleep(r)
-                random_frames = random.randint(0, 1000)
-                self.input.advance_frames(random_frames)
-                self.input.press_key("LEFT")
-                self.input.advance_frames(6)
-                self.input.press_key("A")
-                self.input.advance_frames(6)
-                self.input.press_key("A")
-                self.input.advance_frames(1300)
-                pokemon = self.game.read_enemy_pokemon()
+                pokemon = attempt_fn()
             except (TimeoutError, OSError) as e:
                 print(f"\033[31mConnection error: {e}. Reconnecting...\033[0m")
                 self.bridge.disconnect()
                 self.bridge.connect()
                 continue
+
+            self._log_attempt(pokemon, i, pid_count)
             is_shiny = pokemon.is_shiny
-            pid_count[pokemon.pid] = pid_count.get(pokemon.pid, 0) + 1
-            count = pid_count[pokemon.pid]
-            if count == 1:
-                seen_color = "\033[32m"
-            elif count <= 3:
-                seen_color = "\033[33m"
-            else:
-                seen_color = "\033[31m"
-            reset = "\033[0m"
-            print(f"Pokemon {pokemon} is shiny? {is_shiny} Shiny Value {pokemon.shiny_value}. Try number {i}. PID 0x{pokemon.pid:08X} seen {seen_color}{count}x{reset}")
             i += 1
-
-    def starter_hunter_loop(self, starter: str):
-        self.bridge.connect()
-
-
-        time.sleep(1)
-        is_shiny = False
-        i = 1
-        pid_count = {}
-        while not is_shiny:
-            try:
-                self.soft_reset()
-                r = random.uniform(0.1, 0.3)
-                time.sleep(r)
-                self.select_starter(starter)
-                pokemon = self.game.read_pokemon(STARTER_IDS.get(starter))
-            except (TimeoutError, OSError) as e:
-                print(f"\033[31mConnection error: {e}. Reconnecting...\033[0m")
-                self.bridge.disconnect()
-                self.bridge.connect()
-                continue
-            is_shiny = pokemon.is_shiny
-            pid_count[pokemon.pid] = pid_count.get(pokemon.pid, 0) + 1
-            count = pid_count[pokemon.pid]
-            if count == 1:
-                seen_color = "\033[32m"    # verde
-            elif count <= 3:
-                seen_color = "\033[33m"    # amarillo
-            else:
-                seen_color = "\033[31m"    # rojo
-            reset = "\033[0m"
-            print(f"Pokemon {pokemon} is shiny? {is_shiny} Shiny Value {pokemon.shiny_value}. Try number {i}. PID 0x{pokemon.pid:08X} seen {seen_color}{count}x{reset}")
-
-            i+=1
-
-        self.bridge.disconnect()
-
-            

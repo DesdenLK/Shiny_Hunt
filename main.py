@@ -5,8 +5,18 @@ GENERATIONS = {
     1: {
         "label": "Generación 3 (GBA)",
         "games": {
-            1: {"label": "Pokémon Ruby",     "version": "ruby"},
-            2: {"label": "Pokémon Sapphire", "version": "sapphire"},
+            1: {
+                "label":        "Pokémon Ruby",
+                "version":      "ruby",
+                "hunter_class": RubySapphireHunter,
+                "legendaries":  {1: "Groudon", 2: "Rayquaza", 3: "Regirock"},
+            },
+            2: {
+                "label":        "Pokémon Sapphire",
+                "version":      "sapphire",
+                "hunter_class": RubySapphireHunter,
+                "legendaries":  {1: "Kyogre", 2: "Rayquaza", 3: "Regirock"},
+            },
         },
         "modes": {
             1: "Starter",
@@ -64,22 +74,26 @@ def main(port: int):
     mode = gen["modes"][mode_key]
 
     starter = None
+    legendary = None
+
     if mode == "Starter":
         print(f"\n{BOLD}Selecciona el starter:{RESET}\n")
         starter_key = pick_number("Starter", gen["starters"])
         starter = gen["starters"][starter_key]
+    elif mode == "Legendario":
+        print(f"\n{BOLD}Selecciona el legendario:{RESET}\n")
+        legendary_key = pick_number("Legendario", game["legendaries"])
+        legendary = game["legendaries"][legendary_key]
 
-    summary = f"{game['label']} — {mode}"
-    if starter:
-        summary += f" ({starter})"
-    print(f"\n{GREEN}▶ {summary} (puerto {port}){RESET}\n")
+    target = starter or legendary
+    print(f"\n{GREEN}▶ {game['label']} — {mode} ({target}) (puerto {port}){RESET}\n")
 
-    hunter = RubySapphireHunter(port=port, version=game["version"])
+    hunter = game["hunter_class"](port=port, version=game["version"])
 
     if mode == "Starter":
-        hunter.starter_hunter_loop(starter)
+        hunter.hunt_starter(starter)
     else:
-        hunter.main_legendary_hunter_loop()
+        hunter.hunt_legendary(legendary)
 
 
 if __name__ == "__main__":

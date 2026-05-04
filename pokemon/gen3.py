@@ -9,7 +9,9 @@ POKEMON_NAMES = {
     252: "Treecko",
     255: "Torchic",
     258: "Mudkip",
-    405: "Groudon"
+    401: "Regirock",
+    405: "Groudon",
+    406: "Rayquaza"
 }
 
 
