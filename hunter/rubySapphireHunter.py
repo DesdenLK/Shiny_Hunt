@@ -1,5 +1,7 @@
+from collections.abc import Callable
 from emulator.mgba import MGBA
 from game.rubySapphire import RubySapphireReader
+from pokemon.gen3 import PokemonGen3
 from utils.GbaController import GBAController
 from hunter.base import BaseHunter
 import time
@@ -24,16 +26,16 @@ class RubySapphireHunter(BaseHunter):
     # Interfaz pública                                                     #
     # ------------------------------------------------------------------ #
 
-    def hunt_starter(self, starter: str):
+    def hunt_starter(self, starter: str) -> None:
         self.bridge.connect()
         time.sleep(1)
         self._run_loop(lambda: self._starter_attempt(starter))
         self.bridge.disconnect()
 
-    def hunt_legendary(self, legendary: str):
+    def hunt_legendary(self, legendary: str) -> None:
         dispatch = {
-            "Groudon":  lambda: self._orb_legendary_attempt(),
-            "Kyogre":   lambda: self._orb_legendary_attempt(),
+            "Groudon":  lambda: self._main_legendary_attempt(),
+            "Kyogre":   lambda: self._main_legendary_attempt(),
             "Rayquaza": lambda: self._static_encounter_attempt(500),
             "Regirock": lambda: self._static_encounter_attempt(500),
             "Regice": lambda: self._static_encounter_attempt(500),
@@ -81,7 +83,7 @@ class RubySapphireHunter(BaseHunter):
         self.soft_reset()
         time.sleep(random.uniform(0.1, 0.3))
         self.select_starter(starter)
-        return self.game.read_pokemon(STARTER_IDS[starter])
+        return self.game.read_starter_pokemon(STARTER_IDS[starter])
 
     def _main_legendary_attempt(self):
         self.soft_reset()
@@ -109,10 +111,10 @@ class RubySapphireHunter(BaseHunter):
     # Loop genérico                                                        #
     # ------------------------------------------------------------------ #
 
-    def _run_loop(self, attempt_fn):
+    def _run_loop(self, attempt_fn: Callable[[], PokemonGen3]) -> None:
         is_shiny = False
         i = 1
-        pid_count = {}
+        pid_count: dict[int, int] = {}
 
         while not is_shiny:
             try:

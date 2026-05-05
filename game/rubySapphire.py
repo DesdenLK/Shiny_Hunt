@@ -42,12 +42,13 @@ class RubySapphireReader():
 
         # Assign words to subgroups G/A/E/M (indices 0-3) by block order
         order = _BLOCK_ORDERS[pid % 24]
-        g = [None] * 4
+        g: list[list[int] | None] = [None] * 4
         for i in range(4):
             start = i * 3
             g[order[i] - 1] = [block[start], block[start + 1], block[start + 2]]
 
         # Growth block (g[0]): species in lower 16 bits of first word
+        assert g[0] is not None
         species = g[0][0] & 0xFFFF
 
         tid = otid & 0xFFFF
