@@ -7,6 +7,8 @@ SID_ADDRESS         = 0x03004366
 
 ENEMY_PARTY_ADDRESS = 0x030045C0
 
+ROAMING_POKEMON_ADDRESS = 0x0202887C
+
 # All 24 permutations of [1,2,3,4] mapping data slot → subgroup (G=1 A=2 E=3 M=4)
 _BLOCK_ORDERS = [
     [1,2,3,4],[1,2,4,3],[1,3,2,4],[1,3,4,2],[1,4,2,3],[1,4,3,2],
@@ -28,6 +30,17 @@ class RubySapphireReader():
 
     def read_enemy_pokemon(self) -> PokemonGen3:
         return self._decode_pokemon(ENEMY_PARTY_ADDRESS)
+    
+    def read_roaming_pokemon(self) -> PokemonGen3:
+        pid = self._bridge.read_u32(ROAMING_POKEMON_ADDRESS + 0x00)
+        tid = self._bridge.read_u16(TID_ADDRESS)
+        sid = self._bridge.read_u16(SID_ADDRESS)
+        species = self._bridge.read_u32(ROAMING_POKEMON_ADDRESS + 0x04)
+        #level = self._bridge.read_u32(ROAMING_POKEMON_ADDRESS + 0x08)
+
+        return PokemonGen3(species, pid, sid, tid)
+
+
 
     def _decode_pokemon(self, base: int) -> PokemonGen3:
         pid  = self._bridge.read_u32(base + 0x00)

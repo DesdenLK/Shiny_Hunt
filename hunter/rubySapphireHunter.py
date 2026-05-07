@@ -40,6 +40,8 @@ class RubySapphireHunter(BaseHunter):
             "Regirock": lambda: self._static_encounter_attempt(500),
             "Regice": lambda: self._static_encounter_attempt(500),
             "Registeel": lambda: self._static_encounter_attempt(500),
+            "Latios": lambda: self._roaming_pokemon_attempt(),
+            "Latias": lambda: self._roaming_pokemon_attempt()
         }
         self.bridge.connect()
         time.sleep(1)
@@ -96,6 +98,22 @@ class RubySapphireHunter(BaseHunter):
         self.input.press_key("A")
         self.input.advance_frames(1300)
         return self.game.read_enemy_pokemon()
+    
+    def _roaming_pokemon_attempt(self):
+        # self.soft_reset()
+        # self.input.press_key("A")
+        # self.input.advance_frames(6)
+        # self.input.press_key("A")
+        # self.input.advance_frames(6)
+        # self.input.press_key("A")
+        # self.input.advance_frames(6)
+        # self.input.press_key("A")
+        # self.input.advance_frames(6)
+        # time.sleep(random.uniform(0.1, 0.3))
+        # self.input.advance_frames(random.randint(0, 1000))
+        # self.input.press_key("A")
+        # self.input.advance_frames(6)
+        return self.game.read_roaming_pokemon()
 
     def _static_encounter_attempt(self, framess_to_hold: int):
         self.soft_reset()

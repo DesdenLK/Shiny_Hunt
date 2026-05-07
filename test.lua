@@ -1,5 +1,5 @@
-local TRAINER_TID = 30764
-local TRAINER_SID = 7445
+local TRAINER_TID = 40665
+local TRAINER_SID = 6348
 
 callbacks:add("frame", function()
     local base = 0x0202887C

@@ -9,13 +9,13 @@ GENERATIONS = {
                 "label":        "Pokémon Ruby",
                 "version":      "ruby",
                 "hunter_class": RubySapphireHunter,
-                "legendaries":  {1: "Groudon", 2: "Rayquaza", 3: "Regirock", 4: "Regice", 5: "Registeel"},
+                "legendaries":  {1: "Groudon", 2: "Rayquaza", 3: "Regirock", 4: "Regice", 5: "Registeel", 6: "Latios"},
             },
             2: {
                 "label":        "Pokémon Sapphire",
                 "version":      "sapphire",
                 "hunter_class": RubySapphireHunter,
-                "legendaries":  {1: "Kyogre", 2: "Rayquaza", 3: "Regirock", 4: "Regice", 5: "Registeel"},
+                "legendaries":  {1: "Kyogre", 2: "Rayquaza", 3: "Regirock", 4: "Regice", 5: "Registeel", 6: "Latias"},
             },
         },
         "modes": {

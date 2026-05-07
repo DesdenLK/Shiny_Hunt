@@ -13,7 +13,9 @@ POKEMON_NAMES = {
     402: "Regice",
     403: "Registeel",
     405: "Groudon",
-    406: "Rayquaza"
+    406: "Rayquaza",
+    407: "Latias",
+    408: "Latios"
 }
 
 
