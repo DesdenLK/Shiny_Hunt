@@ -1,11 +1,11 @@
+import time
+import random
 from collections.abc import Callable
 from emulator.mgba import MGBA
 from game.rubySapphire import RubySapphireReader
 from pokemon.gen3 import PokemonGen3
 from utils.GbaController import GBAController
 from hunter.base import BaseHunter
-import time
-import random
 
 STARTER_IDS = {
     "Treecko": 252,
@@ -34,14 +34,14 @@ class RubySapphireHunter(BaseHunter):
 
     def hunt_legendary(self, legendary: str) -> None:
         dispatch = {
-            "Groudon":  lambda: self._main_legendary_attempt(),
-            "Kyogre":   lambda: self._main_legendary_attempt(),
-            "Rayquaza": lambda: self._static_encounter_attempt(500),
-            "Regirock": lambda: self._static_encounter_attempt(500),
-            "Regice": lambda: self._static_encounter_attempt(500),
+            "Groudon":   self._main_legendary_attempt,
+            "Kyogre":    self._main_legendary_attempt,
+            "Rayquaza":  lambda: self._static_encounter_attempt(500),
+            "Regirock":  lambda: self._static_encounter_attempt(500),
+            "Regice":    lambda: self._static_encounter_attempt(500),
             "Registeel": lambda: self._static_encounter_attempt(500),
-            "Latios": lambda: self._roaming_pokemon_attempt(),
-            "Latias": lambda: self._roaming_pokemon_attempt()
+            "Latios":    self._roaming_pokemon_attempt,
+            "Latias":    self._roaming_pokemon_attempt,
         }
         self.bridge.connect()
         time.sleep(1)
@@ -98,21 +98,21 @@ class RubySapphireHunter(BaseHunter):
         self.input.press_key("A")
         self.input.advance_frames(1300)
         return self.game.read_enemy_pokemon()
-    
+
     def _roaming_pokemon_attempt(self):
-        # self.soft_reset()
-        # self.input.press_key("A")
-        # self.input.advance_frames(6)
-        # self.input.press_key("A")
-        # self.input.advance_frames(6)
-        # self.input.press_key("A")
-        # self.input.advance_frames(6)
-        # self.input.press_key("A")
-        # self.input.advance_frames(6)
-        # time.sleep(random.uniform(0.1, 0.3))
-        # self.input.advance_frames(random.randint(0, 1000))
-        # self.input.press_key("A")
-        # self.input.advance_frames(6)
+        self.soft_reset()
+        self.input.press_key("A")
+        self.input.advance_frames(20)
+        self.input.press_key("A")
+        self.input.advance_frames(20)
+        self.input.press_key("A")
+        self.input.advance_frames(20)
+        self.input.press_key("A")
+        self.input.advance_frames(20)
+        time.sleep(random.uniform(0.1, 0.3))
+        self.input.advance_frames(random.randint(0, 1000))
+        self.input.press_key("A")
+        self.input.advance_frames(40)
         return self.game.read_roaming_pokemon()
 
     def _static_encounter_attempt(self, framess_to_hold: int):
@@ -123,7 +123,7 @@ class RubySapphireHunter(BaseHunter):
         self.input.advance_frames(6)
         self.input.advance_frames(framess_to_hold)
         return self.game.read_enemy_pokemon()
-        
+
 
     # ------------------------------------------------------------------ #
     # Loop genérico                                                        #

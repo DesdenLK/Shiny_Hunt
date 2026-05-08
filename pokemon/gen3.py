@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pokemon.pokemon import Pokemon
 
 
-STARTER_IDS = {252, 255, 258} 
+STARTER_IDS = {252, 255, 258}
 
 POKEMON_NAMES = {
     252: "Treecko",

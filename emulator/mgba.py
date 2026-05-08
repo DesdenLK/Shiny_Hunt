@@ -1,7 +1,7 @@
 import socket
-from emulator.base import Emulator
 import logging
 import time
+from emulator.base import Emulator
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ class MGBA(Emulator):
     def read_u32(self, address: int) -> int:
         return self._send_command("R32", address)
 
-    def _send_command_raw(self, cmd: str) -> str:
+    def send_command_raw(self, cmd: str) -> str:
         if not self._sock:
             raise RuntimeError("No conectado.")
         self._sock.sendall(f"{cmd}\n".encode())

@@ -8,11 +8,11 @@ class Emulator(ABC):
     def disconnect(self) -> None:
         ...
 
-    def read_u8(self, address: int) -> int:
+    def read_u8(self, _address: int) -> int:
         ...
 
-    def read_u16(self, address: int) -> int:
+    def read_u16(self, _address: int) -> int:
         ...
 
-    def read_u32(self, address: int) -> int:
+    def read_u32(self, _address: int) -> int:
         ...
