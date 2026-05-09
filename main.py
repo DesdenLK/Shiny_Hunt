@@ -9,18 +9,21 @@ GENERATIONS = {
                 "label":        "Pokémon Ruby",
                 "version":      "ruby",
                 "hunter_class": RubySapphireHunter,
-                "legendaries":  {1: "Groudon", 2: "Rayquaza", 3: "Regirock", 4: "Regice", 5: "Registeel", 6: "Latios"},
+                "legendaries":  {1: "Groudon", 2: "Rayquaza", 3: "Regirock", 
+                4: "Regice", 5: "Registeel", 6: "Latios"},
             },
             2: {
                 "label":        "Pokémon Sapphire",
                 "version":      "sapphire",
                 "hunter_class": RubySapphireHunter,
-                "legendaries":  {1: "Kyogre", 2: "Rayquaza", 3: "Regirock", 4: "Regice", 5: "Registeel", 6: "Latias"},
+                "legendaries":  {1: "Kyogre", 2: "Rayquaza", 3: "Regirock", 
+                4: "Regice", 5: "Registeel", 6: "Latias"},
             },
         },
         "modes": {
             1: "Starter",
             2: "Legendario",
+            3: "Wild Pokemon"
         },
         "starters": {
             1: "Treecko",
@@ -92,8 +95,10 @@ def main(port: int):
 
     if mode == "Starter":
         hunter.hunt_starter(starter)
-    else:
+    elif mode == "Legendario":
         hunter.hunt_legendary(legendary)
+    else:
+        hunter.hunt_wild_pokemon()
 
 
 if __name__ == "__main__":

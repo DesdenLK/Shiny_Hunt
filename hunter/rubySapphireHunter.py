@@ -47,6 +47,11 @@ class RubySapphireHunter(BaseHunter):
         time.sleep(1)
         self._run_loop(dispatch[legendary])
 
+    def hunt_wild_pokemon(self):
+        self.bridge.connect()
+        time.sleep(1)
+        self._run_loop(self._wild_pokemon_attempt)
+
     # ------------------------------------------------------------------ #
     # Mecánicas base                                                       #
     # ------------------------------------------------------------------ #
@@ -98,6 +103,21 @@ class RubySapphireHunter(BaseHunter):
         self.input.press_key("A")
         self.input.advance_frames(1300)
         return self.game.read_enemy_pokemon()
+
+    def _wild_pokemon_attempt(self) -> PokemonGen3:
+        self.soft_reset()
+        time.sleep(random.uniform(0.1, 0.3))
+        self.input.advance_frames(random.randint(0, 1000))
+
+        last_pid = self.game.read_enemy_pokemon().pid
+
+        while True:
+            for direction in ("LEFT", "UP", "RIGHT", "DOWN"):
+                self.input.tap_key(direction, 1)
+                self.input.advance_frames(200)
+                pokemon = self.game.read_enemy_pokemon()
+                if pokemon.species_id != 0 and pokemon.pid != last_pid:
+                    return pokemon
 
     def _roaming_pokemon_attempt(self):
         self.soft_reset()

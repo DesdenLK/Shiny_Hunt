@@ -19,6 +19,10 @@ class BaseHunter(ABC):
     def hunt_legendary(self, legendary: str):
         ...
 
+    @abstractmethod
+    def hunt_wild_pokemon(self):
+        ...
+
     def _log_attempt(self, pokemon, i: int, pid_count: dict) -> None:
         pid_count[pokemon.pid] = pid_count.get(pokemon.pid, 0) + 1
         count = pid_count[pokemon.pid]

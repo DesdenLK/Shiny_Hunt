@@ -24,10 +24,10 @@ local KEY_MAP = {
     A=1, B=2, SELECT=4, START=8, RIGHT=16, LEFT=32, UP=64, DOWN=128, R=256, L=512
 }
 
-local keyQueue = {}  -- each entry: {key=val, sock=sock}
+local keyQueue = {}  -- each entry: {key=val, sock=sock, hold=frames}
 local currentKey = nil
 local currentSock = nil
-local framesToHold = 60
+local currentHold = 60
 local frameCount = 0
 
 local framesToAdvance = 0
@@ -36,7 +36,7 @@ local advanceSock = nil
 callbacks:add("frame", function()
     if currentKey then
         frameCount = frameCount + 1
-        if frameCount >= framesToHold then
+        if frameCount >= currentHold then
             emu:clearKeys(currentKey)
             currentKey = nil
             frameCount = 0
@@ -49,6 +49,7 @@ callbacks:add("frame", function()
         local item = table.remove(keyQueue, 1)
         currentKey = item.key
         currentSock = item.sock
+        currentHold = item.hold
         emu:addKeys(currentKey)
         frameCount = 0
     end
@@ -83,7 +84,16 @@ local function handleClient(sock)
                 local key_name = data:match("^K:(%a+)")
                 local key_val = KEY_MAP[key_name]
                 if key_val then
-                    table.insert(keyQueue, {key=key_val, sock=sock})
+                    table.insert(keyQueue, {key=key_val, sock=sock, hold=60})
+                else
+                    sock:send("OK\n")
+                end
+
+            elseif data:match("^KF:%a+:%d+") then
+                local key_name, frames = data:match("^KF:(%a+):(%d+)")
+                local key_val = KEY_MAP[key_name]
+                if key_val then
+                    table.insert(keyQueue, {key=key_val, sock=sock, hold=tonumber(frames)})
                 else
                     sock:send("OK\n")
                 end
@@ -95,7 +105,7 @@ local function handleClient(sock)
 
             elseif data:match("^SR") then
                 -- A(1) + B(2) + SELECT(4) + START(8) = 15
-                table.insert(keyQueue, {key=15, sock=sock})
+                table.insert(keyQueue, {key=15, sock=sock, hold=60})
 
             elseif data:match("^AF:%d+") then
                 local n = tonumber(data:match("^AF:(%d+)"))
